@@ -5,10 +5,35 @@
     import ChevronsUpDown from "lucide-svelte/icons/chevrons-up-down";
     import GalleryVerticalEnd from "lucide-svelte/icons/gallery-vertical-end";
     import type {Company} from "$lib/types";
+    import {useSidebar} from "$lib/components/ui/sidebar/index.js";
+    import {onDestroy} from "svelte";
 
     let { companies, defaultCompany }: { companies: Company[]; defaultCompany: Company } = $props();
 
     let selectedCompany = $state(defaultCompany);
+
+    const sidebar = useSidebar();
+
+    const handleKeyPress = (event: KeyboardEvent) => {
+        if (event.ctrlKey) {
+            // Convert the key to a number and adjust the index by subtracting 1
+            const index = Number(event.key) - 1;
+            if (index >= 0 && index < companies.length) {
+                event.preventDefault()
+                selectedCompany = companies[index];
+            }
+        }
+    };
+
+    /*// Add the event listener when the component is mounted
+    $effect.pre(() =>{
+        window.addEventListener('keydown', handleKeyPress);
+    });
+
+    // Remove the event listener when the component is destroyed
+    onDestroy(() => {
+        window.removeEventListener('keydown', handleKeyPress);
+    });*/
 </script>
 
 <Sidebar.Menu>
@@ -21,10 +46,11 @@
                             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                             {...props}
                     >
+                        {@const Icon = selectedCompany.icon}
                         <div
                                 class="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg"
                         >
-                            <GalleryVerticalEnd class="size-4" />
+                            <Icon class="size-4"/>
                         </div>
                         <div class="flex flex-col gap-0.5 leading-none">
                             <span class="font-semibold">{selectedCompany.name}</span>
@@ -33,10 +59,20 @@
                     </Sidebar.MenuButton>
                 {/snippet}
             </DropdownMenu.Trigger>
-            <DropdownMenu.Content class="w-[--bits-dropdown-menu-anchor-width]" align="start">
-                {#each companies as company (company)}
+            <DropdownMenu.Content
+                    class="w-[--bits-dropdown-menu-anchor-width] min-w-56 rounded-lg"
+                    align="start"
+                    side={sidebar.isMobile ? "bottom" : "right"}
+                    sideOffset={4}>
+                <DropdownMenu.Label class="text-muted-foreground text-xs">Companies</DropdownMenu.Label>
+                {#each companies as company, index (company.name)}
+                    {@const Icon = selectedCompany.icon}
                     <DropdownMenu.Item onSelect={() => (selectedCompany = company)}>
+                        <div class="flex size-6 items-center justify-center rounded-sm border">
+                            <Icon class="size-4 shrink-0" />
+                        </div>
                         {company.name}
+                        <DropdownMenu.Shortcut>⌘{index + 1}</DropdownMenu.Shortcut>
                         {#if company === selectedCompany}
                             <Check class="ml-auto" />
                         {/if}

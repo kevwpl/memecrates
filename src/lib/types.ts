@@ -1,6 +1,7 @@
-import type {SvelteComponent} from "svelte";
+import { type SvelteComponent } from 'svelte';
+import { type Icon } from 'lucide-svelte';
 
 export type Company = {
     name: string,
-    icon: typeof SvelteComponent
+    icon: typeof Icon
 }

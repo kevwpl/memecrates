@@ -1,19 +1,15 @@
-
 <script lang="ts">
-    import Calendar from "lucide-svelte/icons/calendar";
-    import House from "lucide-svelte/icons/house";
-    import Inbox from "lucide-svelte/icons/inbox";
-    import Search from "lucide-svelte/icons/search";
-    import Settings from "lucide-svelte/icons/settings";
-
+    import { t } from "$lib/i18n";
     import * as Sidebar from "$lib/components/ui/sidebar/index.js";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
 
     import CompanySelection from "$lib/components/ui/CompanySelection.svelte";
 
-    import {ChevronDown, Clock3, FilePlus2, FileText, LayoutDashboard, Shell} from "lucide-svelte";
+    import {Clock3, FilePlus, LayoutDashboard, Shell} from "lucide-svelte";
     import type {Company} from "$lib/types";
 
+    const { lang } : { lang : string } = $props();
+    console.log(lang)
 
     const companies : Company[] = [
         {
@@ -32,16 +28,19 @@
             url: "#",
             items: [
                 {
-                    title: "Dashboard",
+                    title: t(lang, "nav.dashboard"),
                     url: "#",
+                    icon: LayoutDashboard
                 },
                 {
-                    title: "History",
+                    title: t(lang, "nav.history"),
                     url: "#",
+                    icon: Clock3
                 },
                 {
-                    title: "Create",
+                    title: t(lang, "nav.create"),
                     url: "#",
+                    icon: FilePlus
                 },
             ],
         },
@@ -61,9 +60,13 @@
                     <Sidebar.Menu>
                         {#each group.items as item (item.title)}
                             <Sidebar.MenuItem>
-                                <Sidebar.MenuButton isActive={item.isActive}>
+                                {@const Icon = item.icon}
+                                <Sidebar.MenuButton>
                                     {#snippet child({ props })}
-                                        <a href={item.url} {...props}>{item.title}</a>
+                                        <a href={item.url} {...props}>
+                                            <Icon />
+                                            {item.title}
+                                        </a>
                                     {/snippet}
                                 </Sidebar.MenuButton>
                             </Sidebar.MenuItem>
