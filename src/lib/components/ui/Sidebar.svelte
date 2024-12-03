@@ -7,24 +7,33 @@
 
     import {Clock3, FilePlus, LayoutDashboard, Shell} from "lucide-svelte";
     import type {Company} from "$lib/types";
+    import GalleryVerticalEnd from "lucide-svelte/icons/gallery-vertical-end";
 
     const { lang } : { lang : string } = $props();
     console.log(lang)
 
     const companies : Company[] = [
         {
-            name: "KevinCompany",
-            icon: Shell
+            name: "Kevin",
+            street: "Kinostraße 14/2",
+            zip: 3680,
+            town: "Persenbeug",
+            uid: "ATU12345678",
+            icon: GalleryVerticalEnd,
         },
         {
-            name: "Test",
-            icon: Shell
+            name: "AlterKevin",
+            street: "Florianistraße 4/5/1",
+            zip: 3370,
+            town: "Ybbs a. d. Donau",
+            uid: "ATU87654321",
+            icon: Shell,
         },
     ]
 
     const navMain = [
         {
-            title: "Invoices",
+            title: t(lang, "nav.invoices"),
             url: "#",
             items: [
                 {
@@ -49,7 +58,7 @@
 
 <Sidebar.Root collapsible="icon">
     <Sidebar.Header>
-            <CompanySelection companies={companies} defaultCompany={companies[0]}/>
+            <CompanySelection companies={companies} defaultCompany={companies[0]} {lang}/>
     </Sidebar.Header>
     <Sidebar.Content>
         <!-- We create a Sidebar.Group for each parent. -->
