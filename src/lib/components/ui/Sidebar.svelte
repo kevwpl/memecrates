@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { t } from "$lib/i18n";
+    import { t } from "$lib/i18n.svelte";
     import * as Sidebar from "$lib/components/ui/sidebar/index.js";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
 
@@ -9,16 +9,13 @@
     import type {Company} from "$lib/types";
     import GalleryVerticalEnd from "lucide-svelte/icons/gallery-vertical-end";
 
-    const { lang } : { lang : string } = $props();
-    console.log(lang)
-
     const companies : Company[] = [
         {
             name: "Kevin",
             street: "Kinostraße 14/2",
             zip: 3680,
             town: "Persenbeug",
-            uid: "ATU12345678",
+            uuid: "ATU12345678",
             icon: GalleryVerticalEnd,
         },
         {
@@ -26,28 +23,28 @@
             street: "Florianistraße 4/5/1",
             zip: 3370,
             town: "Ybbs a. d. Donau",
-            uid: "ATU87654321",
+            uuid: "ATU87654321",
             icon: Shell,
         },
     ]
 
     const navMain = [
         {
-            title: t(lang, "nav.invoices"),
+            title: t("nav.invoices"),
             url: "#",
             items: [
                 {
-                    title: t(lang, "nav.dashboard"),
+                    title: t("nav.dashboard"),
                     url: "#",
                     icon: LayoutDashboard
                 },
                 {
-                    title: t(lang, "nav.history"),
+                    title: t("nav.history"),
                     url: "#",
                     icon: Clock3
                 },
                 {
-                    title: t(lang, "nav.create"),
+                    title: t("nav.create"),
                     url: "#",
                     icon: FilePlus
                 },
@@ -58,7 +55,7 @@
 
 <Sidebar.Root collapsible="icon">
     <Sidebar.Header>
-            <CompanySelection companies={companies} defaultCompany={companies[0]} {lang}/>
+            <CompanySelection companies={companies} defaultCompany={companies[0]}/>
     </Sidebar.Header>
     <Sidebar.Content>
         <!-- We create a Sidebar.Group for each parent. -->

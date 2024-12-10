@@ -7,7 +7,7 @@
     import type {Company} from "$lib/types";
     import {useSidebar} from "$lib/components/ui/sidebar/index.js";
     import {onDestroy} from "svelte";
-    import { t } from "$lib/i18n";
+    import { t } from "$lib/i18n.svelte";
 
     let { companies, defaultCompany, lang }: { companies: Company[]; defaultCompany: Company, lang : string } = $props();
 
@@ -55,7 +55,7 @@
                         </div>
                         <div class="flex flex-col gap-0.5 leading-none">
                             <span class="font-semibold">{selectedCompany.name}</span>
-                            <span class="font-semibold text-xs text-muted-foreground">{selectedCompany.uid}</span>
+                            <span class="font-semibold text-xs text-muted-foreground">{selectedCompany.uuid}</span>
                         </div>
                         <ChevronsUpDown class="ml-auto" />
                     </Sidebar.MenuButton>
@@ -66,7 +66,7 @@
                     align="start"
                     side={sidebar.isMobile ? "bottom" : "right"}
                     sideOffset={4}>
-                <DropdownMenu.Label class="text-muted-foreground text-xs">{t(lang, "nav.companies")}</DropdownMenu.Label>
+                <DropdownMenu.Label class="text-muted-foreground text-xs">{t("nav.companies")}</DropdownMenu.Label>
                 {#each companies as company, index (company.name)}
                     {@const Icon = company.icon}
                     <DropdownMenu.Item onSelect={() => (selectedCompany = company)}>

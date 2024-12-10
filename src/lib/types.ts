@@ -7,5 +7,22 @@ export type Company = {
     street: string,
     zip: number,
     town: string,
-    uid: string
+    uuid: string
+}
+
+export type User = {
+    uuid: string,
+    firstname: string,
+    email: string,
+    phone: string,
+    username: string,
+    password: string
+}
+
+export type Session = {
+    uuid: string,
+    useruuid: string,
+    token: string,
+    expires: Date,
+    perma: boolean
 }
