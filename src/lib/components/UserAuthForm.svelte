@@ -5,6 +5,7 @@
     import {LoaderIcon} from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import {t} from "$lib/i18n.svelte";
+    import {goto} from "$app/navigation";
 
     // Login-Daten
     let email: string = $state("");
@@ -42,9 +43,11 @@
             const data = await response.json();
             const user = data.user;
             toast.success(`Willkommen, ${user.firstname}!`);
+
+            goto('/en/app/dashboard');
         } catch (err) {
             console.error("Ein Fehler ist aufgetreten:", err);
-            errorMessage = "Ein Verbindungsfehler ist aufgetreten.";
+            toast.error("Ein Verbindungsfehler ist aufgetreten.");
         }
 
         isLoading = false;
@@ -52,37 +55,38 @@
 </script>
 
 <div class="grid gap-2">
-    <div class="grid gap-1">
-        <Label class="sr-only" for="email">Email</Label>
-        <Input
-                bind:value={email}
-                id="email"
-                placeholder={t("login.examplemail")}
-                type="email"
-                autocapitalize="none"
-                autocomplete="email"
-                autocorrect="off"
-                disabled={isLoading}
-        />
-    </div>
-    <div class="grid gap-1">
-        <Label class="sr-only" for="email">Password</Label>
-        <Input
-                bind:value={password}
-                id="password"
-                placeholder="••••••••"
-                type="password"
-                autocapitalize="none"
-                autocomplete="email"
-                autocorrect="off"
-                disabled={isLoading}
-        />
-    </div>
-    <Button type="submit" disabled={isLoading} onclick={handleSubmit}>
-        {#if isLoading}
-            <LoaderIcon class="mr-2 h-4 w-4 animate-spin" />
-        {/if}
-        {t("login.login")}
-    </Button>
-    {errorMessage}
+    <form class="grid gap-2">
+        <div class="grid gap-1">
+            <Label class="sr-only" for="email">Email</Label>
+            <Input
+                    bind:value={email}
+                    id="email"
+                    placeholder={t("login.examplemail")}
+                    type="email"
+                    autocapitalize="none"
+                    autocomplete="email"
+                    autocorrect="off"
+                    disabled={isLoading}
+            />
+        </div>
+        <div class="grid gap-1">
+            <Label class="sr-only" for="email">Password</Label>
+            <Input
+                    bind:value={password}
+                    id="password"
+                    placeholder="••••••••"
+                    type="password"
+                    autocapitalize="none"
+                    autocomplete="email"
+                    autocorrect="off"
+                    disabled={isLoading}
+            />
+        </div>
+        <Button type="submit" disabled={isLoading} onclick={handleSubmit}>
+            {#if isLoading}
+                <LoaderIcon class="mr-2 h-4 w-4 animate-spin" />
+            {/if}
+            {t("login.login")}
+        </Button>
+    </form>
 </div>
