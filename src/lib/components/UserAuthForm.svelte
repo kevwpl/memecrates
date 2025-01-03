@@ -2,7 +2,7 @@
     import {Label} from "$lib/components/ui/label";
     import {Input} from "$lib/components/ui/input";
     import {Button} from "$lib/components/ui/button";
-    import {LoaderIcon} from "lucide-svelte";
+    import {LoaderCircle, LoaderIcon} from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import {t} from "$lib/i18n.svelte";
     import {goto} from "$app/navigation";
@@ -42,6 +42,7 @@
 
             const data = await response.json();
             const user = data.user;
+            sessionStorage.setItem('token', data.session.token)
             toast.success(`Willkommen, ${user.firstname}!`);
 
             goto('/en/app/dashboard');
@@ -84,7 +85,7 @@
         </div>
         <Button type="submit" disabled={isLoading} onclick={handleSubmit}>
             {#if isLoading}
-                <LoaderIcon class="mr-2 h-4 w-4 animate-spin" />
+                <LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
             {/if}
             {t("login.login")}
         </Button>

@@ -7,7 +7,8 @@ export type Company = {
     street: string,
     zip: number,
     town: string,
-    uuid: string
+    uuid: string,
+    uid: string
 }
 
 export type User = {

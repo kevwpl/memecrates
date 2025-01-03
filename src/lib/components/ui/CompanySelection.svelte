@@ -8,8 +8,9 @@
     import {useSidebar} from "$lib/components/ui/sidebar/index.js";
     import {onDestroy} from "svelte";
     import { t } from "$lib/i18n.svelte";
+    import { currentCompany } from "$lib/stores/stores";
 
-    let { companies, defaultCompany, lang }: { companies: Company[]; defaultCompany: Company, lang : string } = $props();
+    let { companies, defaultCompany }: { companies: Company[]; defaultCompany: Company } = $props();
 
     let selectedCompany = $state(defaultCompany);
 
@@ -25,6 +26,10 @@
             }
         }
     };
+
+    $effect(() => {
+        currentCompany.set(selectedCompany);
+    })
 
     /*// Add the event listener when the component is mounted
     $effect.pre(() =>{
@@ -55,7 +60,7 @@
                         </div>
                         <div class="flex flex-col gap-0.5 leading-none">
                             <span class="font-semibold">{selectedCompany.name}</span>
-                            <span class="font-semibold text-xs text-muted-foreground">{selectedCompany.uuid}</span>
+                            <span class="font-semibold text-xs text-muted-foreground">{selectedCompany.uid}</span>
                         </div>
                         <ChevronsUpDown class="ml-auto" />
                     </Sidebar.MenuButton>
@@ -74,9 +79,10 @@
                             <Icon class="size-4 shrink-0" />
                         </div>
                         {company.name}
-                        <DropdownMenu.Shortcut>⌘{index + 1}</DropdownMenu.Shortcut>
                         {#if company === selectedCompany}
                             <Check class="ml-auto" />
+                        {:else}
+                            <DropdownMenu.Shortcut>⌘{index + 1}</DropdownMenu.Shortcut>
                         {/if}
                     </DropdownMenu.Item>
                 {/each}

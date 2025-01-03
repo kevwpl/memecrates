@@ -9,24 +9,16 @@
     import type {Company} from "$lib/types";
     import GalleryVerticalEnd from "lucide-svelte/icons/gallery-vertical-end";
 
-    const companies : Company[] = [
+    let companies : Company[] = $state([
         {
-            name: "Kevin",
+            name: "Laden",
             street: "Kinostraße 14/2",
             zip: 3680,
             town: "Persenbeug",
             uuid: "ATU12345678",
             icon: GalleryVerticalEnd,
-        },
-        {
-            name: "AlterKevin",
-            street: "Florianistraße 4/5/1",
-            zip: 3370,
-            town: "Ybbs a. d. Donau",
-            uuid: "ATU87654321",
-            icon: Shell,
-        },
-    ]
+        }
+    ]);
 
     const navMain = [
         {
@@ -51,6 +43,37 @@
             ],
         },
     ];
+
+    async function fetchCompanies(
+        endpoint: string,
+        sessionToken: string
+    ){
+        try {
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ sessionToken }),
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                return { error: errorResponse.error || "An unknown error occurred" };
+            }
+
+            const data = await response.json();
+            companies = data;
+            console.log(data)
+        } catch (error) {
+            console.error("Error in getCompanies:", error);
+            return { error: "Failed to fetch companies" };
+        }
+    }
+
+    $effect.pre(() => {
+        fetchCompanies("/api/get/company", sessionStorage.getItem("token") || "");
+    })
 </script>
 
 <Sidebar.Root collapsible="icon">

@@ -25,6 +25,12 @@ export const POST: RequestHandler = async ({ request }) => {
 
         const client = await pool.connect();
         try {
+            // Löschen aller abgelaufenen Sitzungen
+            const deleteExpiredSessionsQuery = `
+                DELETE FROM session WHERE expires < NOW()
+            `;
+            await client.query(deleteExpiredSessionsQuery);
+
             // Benutzer anhand der E-Mail suchen
             const userQuery = 'SELECT * FROM users WHERE email = $1';
             const userResult = await client.query(userQuery, [email]);
