@@ -6,8 +6,9 @@
     import CompanySelection from "$lib/components/ui/CompanySelection.svelte";
 
     import {Clock3, FilePlus, LayoutDashboard, Shell} from "lucide-svelte";
-    import type {Company} from "$lib/types";
+    import type {Company, User} from "$lib/types";
     import GalleryVerticalEnd from "lucide-svelte/icons/gallery-vertical-end";
+    import NavUser from "$lib/components/ui/NavUser.svelte";
 
     let companies : Company[] = $state([
         {
@@ -19,6 +20,7 @@
             icon: GalleryVerticalEnd,
         }
     ]);
+    let user: User = $state({});
 
     const navMain = [
         {
@@ -64,15 +66,42 @@
 
             const data = await response.json();
             companies = data;
-            console.log(data)
         } catch (error) {
             console.error("Error in getCompanies:", error);
             return { error: "Failed to fetch companies" };
         }
     }
 
+    async function fetchUser(
+        endpoint: string,
+        sessionToken: string
+    ) {
+        try {
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ sessionToken }),
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                return { error: errorResponse.error || "An unknown error occurred" };
+            }
+
+            const userResponse: User = await response.json();
+            user = userResponse;
+            console.log(user);
+        } catch (error) {
+            console.error("Error in fetchUser:", error);
+            return { error: "Failed to fetch user" };
+        }
+    }
+
     $effect.pre(() => {
         fetchCompanies("/api/get/company", sessionStorage.getItem("token") || "");
+        fetchUser("/api/get/user/token", sessionStorage.getItem("token") || "");
     })
 </script>
 
@@ -105,6 +134,9 @@
             </Sidebar.Group>
         {/each}
     </Sidebar.Content>
+    <Sidebar.Footer>
+        <NavUser {user}/>
+    </Sidebar.Footer>
     <Sidebar.Rail />
 </Sidebar.Root>
 

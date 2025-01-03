@@ -32,14 +32,19 @@ export const POST: RequestHandler = async ({ request }) => {
             await client.query(deleteExpiredSessionsQuery);
 
             // Benutzer anhand der E-Mail suchen
-            const userQuery = 'SELECT * FROM users WHERE email = $1';
-            const userResult = await client.query(userQuery, [email]);
+            let userQuery = 'SELECT * FROM users WHERE email = $1';
+            let userResult = await client.query(userQuery, [email]);
 
             if (userResult.rows.length === 0) {
-                return new Response(
-                    JSON.stringify({ error: 'login.notfound' }),
-                    { status: 404, headers: { 'Content-Type': 'application/json' } }
-                );
+                userQuery = 'SELECT * FROM users WHERE username = $1';
+                userResult = await client.query(userQuery, [email]);
+
+                if (userResult.rows.length === 0) {
+                    return new Response(
+                        JSON.stringify({error: 'login.notfound'}),
+                        {status: 404, headers: {'Content-Type': 'application/json'}}
+                    );
+                }
             }
 
             const user: User = userResult.rows[0];

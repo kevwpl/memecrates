@@ -14,10 +14,12 @@ export type Company = {
 export type User = {
     uuid: string,
     firstname: string,
+    lastname: string,
     email: string,
     phone: string,
     username: string,
-    password: string
+    password: string,
+    avatar: string
 }
 
 export type Session = {
