@@ -6,8 +6,9 @@
     import { useSidebar } from "$lib/components/ui/sidebar/index.js";
     import type {User} from "$lib/types";
     import ChevronsUpDown from "lucide-svelte/icons/chevrons-up-down";
-    import {BadgeCheck, Bell, CreditCard, LogOut} from "lucide-svelte";
+    import {BadgeCheck, Bell, CreditCard, LogOut, Moon, Sun} from "lucide-svelte";
     import {goto} from "$app/navigation";
+    import { toggleMode } from "mode-watcher";
 
     let { user } : { user: User} = $props();
 
@@ -58,6 +59,18 @@
                             </div>
                         </div>
                     </DropdownMenu.Label>
+                    <DropdownMenu.Separator />
+                    <DropdownMenu.Group>
+                        <DropdownMenu.Item onclick={toggleMode}>
+                            <Sun
+                                    class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+                            />
+                            <Moon
+                                    class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+                            />
+                            Theme
+                        </DropdownMenu.Item>
+                    </DropdownMenu.Group>
                     <DropdownMenu.Separator />
                     <DropdownMenu.Group>
                         <DropdownMenu.Item>

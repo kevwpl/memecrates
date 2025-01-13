@@ -31,6 +31,10 @@
         currentCompany.set(selectedCompany);
     })
 
+    $effect.pre(() => {
+        currentCompany.set(selectedCompany);
+    })
+
     /*// Add the event listener when the component is mounted
     $effect.pre(() =>{
         window.addEventListener('keydown', handleKeyPress);

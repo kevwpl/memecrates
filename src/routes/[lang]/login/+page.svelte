@@ -15,7 +15,7 @@
 					url('https://images.unsplash.com/photo-1730909352965-85fd88a01d80?q=802&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"
         />
         <div class="relative z-20 flex items-center text-lg font-medium">
-            Azami
+            Invoicer
         </div>
         <div class="relative z-20 mt-auto">
             <blockquote class="space-y-2">
