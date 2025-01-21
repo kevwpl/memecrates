@@ -10,7 +10,11 @@ const unsubscribe = currentCompany.subscribe((value) => company = value || {name
 
 </script>
 
-<h1 class="font-bold text-2xl flex items-center gap-2"><LayoutDashboard />{t("dashboard.dashboard")}</h1>
+<div>
+    <h1 class="font-bold text-2xl flex items-center gap-2"><LayoutDashboard />{t("dashboard.dashboard")}</h1>
+    <h4 class="text-muted-foreground">{t("invoices.desc")}</h4>
+</div>
+
 <div>
     <p>Guten Tag! {company.name}</p>
 </div>

@@ -27,14 +27,9 @@
         }
     };
 
-    $effect(() => {
-        currentCompany.set(selectedCompany);
-    })
-
     $effect.pre(() => {
-        currentCompany.set(selectedCompany);
+        currentCompany.set(companies[0]);
     })
-
     /*// Add the event listener when the component is mounted
     $effect.pre(() =>{
         window.addEventListener('keydown', handleKeyPress);
@@ -48,49 +43,51 @@
 
 <Sidebar.Menu>
     <Sidebar.MenuItem>
-        <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
-                {#snippet child({ props })}
-                    <Sidebar.MenuButton
-                            size="lg"
-                            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                            {...props}
-                    >
-                        {@const Icon = selectedCompany.icon}
-                        <div
-                                class="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg"
+        {#if selectedCompany}
+            <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                    {#snippet child({ props })}
+                        <Sidebar.MenuButton
+                                size="lg"
+                                class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                                {...props}
                         >
-                            <Icon class="size-4"/>
-                        </div>
-                        <div class="flex flex-col gap-0.5 leading-none">
-                            <span class="font-semibold">{selectedCompany.name}</span>
-                            <span class="font-semibold text-xs text-muted-foreground">{selectedCompany.uid}</span>
-                        </div>
-                        <ChevronsUpDown class="ml-auto" />
-                    </Sidebar.MenuButton>
-                {/snippet}
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content
-                    class="w-[--bits-dropdown-menu-anchor-width] min-w-56 rounded-lg"
-                    align="start"
-                    side={sidebar.isMobile ? "bottom" : "right"}
-                    sideOffset={4}>
-                <DropdownMenu.Label class="text-muted-foreground text-xs">{t("nav.companies")}</DropdownMenu.Label>
-                {#each companies as company, index (company.name)}
-                    {@const Icon = company.icon}
-                    <DropdownMenu.Item onSelect={() => (selectedCompany = company)}>
-                        <div class="flex size-6 items-center justify-center rounded-sm border">
-                            <Icon class="size-4 shrink-0" />
-                        </div>
-                        {company.name}
-                        {#if company === selectedCompany}
-                            <Check class="ml-auto" />
-                        {:else}
-                            <DropdownMenu.Shortcut>⌘{index + 1}</DropdownMenu.Shortcut>
-                        {/if}
-                    </DropdownMenu.Item>
-                {/each}
-            </DropdownMenu.Content>
-        </DropdownMenu.Root>
+                            {@const Icon = selectedCompany.icon}
+                            <div
+                                    class="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg"
+                            >
+                                <Icon class="size-4"/>
+                            </div>
+                            <div class="flex flex-col gap-0.5 leading-none">
+                                <span class="font-semibold">{selectedCompany.name}</span>
+                                <span class="font-semibold text-xs text-muted-foreground">{selectedCompany.uid}</span>
+                            </div>
+                            <ChevronsUpDown class="ml-auto" />
+                        </Sidebar.MenuButton>
+                    {/snippet}
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content
+                        class="w-[--bits-dropdown-menu-anchor-width] min-w-56 rounded-lg"
+                        align="start"
+                        side={sidebar.isMobile ? "bottom" : "right"}
+                        sideOffset={4}>
+                    <DropdownMenu.Label class="text-muted-foreground text-xs">{t("nav.companies")}</DropdownMenu.Label>
+                    {#each companies as company, index (company.name)}
+                        {@const Icon = company.icon}
+                        <DropdownMenu.Item onSelect={() => (selectedCompany = company)}>
+                            <div class="flex size-6 items-center justify-center rounded-sm border">
+                                <Icon class="size-4 shrink-0" />
+                            </div>
+                            {company.name}
+                            {#if company === selectedCompany}
+                                <Check class="ml-auto" />
+                            {:else}
+                                <DropdownMenu.Shortcut>⌘{index + 1}</DropdownMenu.Shortcut>
+                            {/if}
+                        </DropdownMenu.Item>
+                    {/each}
+                </DropdownMenu.Content>
+            </DropdownMenu.Root>
+        {/if}
     </Sidebar.MenuItem>
 </Sidebar.Menu>

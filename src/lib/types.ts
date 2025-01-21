@@ -29,3 +29,12 @@ export type Session = {
     expires: Date,
     perma: boolean
 }
+
+export type Customer = {
+    uuid: string,
+    name: string,
+    street: string,
+    zip: number,
+    town: string,
+    uid?: string
+}

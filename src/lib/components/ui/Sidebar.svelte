@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { t } from "$lib/i18n.svelte";
+    import { t, locale } from "$lib/i18n.svelte";
     import * as Sidebar from "$lib/components/ui/sidebar/index.js";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
 
     import CompanySelection from "$lib/components/ui/CompanySelection.svelte";
 
-    import {Clock3, FilePlus, LayoutDashboard, Shell} from "lucide-svelte";
+    import {Clock3, FilePlus, Handshake, LayoutDashboard, ReceiptEuroIcon, Shell, Users} from "lucide-svelte";
     import type {Company, User} from "$lib/types";
     import GalleryVerticalEnd from "lucide-svelte/icons/gallery-vertical-end";
     import NavUser from "$lib/components/ui/NavUser.svelte";
@@ -29,21 +29,32 @@
             items: [
                 {
                     title: t("nav.dashboard"),
-                    url: "#",
+                    url: "/" + locale.lang + "/app/dashboard",
                     icon: LayoutDashboard
                 },
                 {
-                    title: t("nav.history"),
-                    url: "#",
-                    icon: Clock3
-                },
-                {
-                    title: t("nav.create"),
-                    url: "#",
-                    icon: FilePlus
+                    title: t("nav.receipts"),
+                    url: "/" + locale.lang + "/app/invoices",
+                    icon: ReceiptEuroIcon
                 },
             ],
         },
+        {
+            title: t("nav.other"),
+            url: "#",
+            items: [
+                {
+                    title: t("nav.customers"),
+                    url: "/" + locale.lang + "/app/customers",
+                    icon: Users
+                },
+                {
+                    title: t("nav.services"),
+                    url: "/" + locale.lang + "/app/services",
+                    icon: Handshake
+                },
+            ],
+        }
     ];
 
     async function fetchCompanies(
@@ -92,7 +103,6 @@
 
             const userResponse: User = await response.json();
             user = userResponse;
-            console.log(user);
         } catch (error) {
             console.error("Error in fetchUser:", error);
             return { error: "Failed to fetch user" };
@@ -107,7 +117,9 @@
 
 <Sidebar.Root collapsible="icon">
     <Sidebar.Header>
+        {#if companies[0].name !== "Laden"}
             <CompanySelection companies={companies} defaultCompany={companies[0]}/>
+        {/if}
     </Sidebar.Header>
     <Sidebar.Content>
         <!-- We create a Sidebar.Group for each parent. -->
