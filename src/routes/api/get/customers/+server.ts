@@ -12,12 +12,19 @@ const pool = new Pool({
 
 export const POST: RequestHandler = async ({ request }) => {
     try {
-        // Extract session token from the request body
-        const { sessionToken } = await request.json();
+        // Extract session token and company from the request body
+        const { sessionToken, company } = await request.json();
 
         if (!sessionToken) {
             return new Response(
                 JSON.stringify({ error: "Session token is required" }),
+                { status: 400, headers: { "Content-Type": "application/json" } }
+            );
+        }
+
+        if (!company) {
+            return new Response(
+                JSON.stringify({ error: "Company is required" }),
                 { status: 400, headers: { "Content-Type": "application/json" } }
             );
         }
@@ -47,11 +54,13 @@ export const POST: RequestHandler = async ({ request }) => {
                 );
             }
 
-            const customers = `
+            // Fetch customers associated with the specified company
+            const customersQuery = `
                 SELECT *
                 FROM customer
+                WHERE company = $1
             `;
-            const companyResult = await client.query(customers);
+            const companyResult = await client.query(customersQuery, [company]);
 
             return new Response(JSON.stringify(companyResult.rows), {
                 headers: { "Content-Type": "application/json" },

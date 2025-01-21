@@ -36,5 +36,6 @@ export type Customer = {
     street: string,
     zip: number,
     town: string,
-    uid?: string
+    uid?: string,
+    company: string,
 }

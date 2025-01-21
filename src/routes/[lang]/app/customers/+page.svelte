@@ -1,15 +1,16 @@
 <script lang="ts">
-    import {LayoutDashboard, ReceiptEuro, Users} from "lucide-svelte";
+    import {LayoutDashboard, Loader, Loader2, ReceiptEuro, Users} from "lucide-svelte";
     import { t } from "$lib/i18n.svelte.ts";
     import CustomerDataTable from "./CustomerDataTable.svelte";
     import { columns } from "./CustomerColumns.ts";
 
-    let data = $state();
+    let data = $state([]);
     let loading = $state(true);
 
     const API_URL = '/api/get/customers';
     async function fetchData() {
         const sessionToken = sessionStorage.getItem("token") || "";
+        const company = "89daff09-1fa7-48bb-972f-469c03302867";
 
         try {
             const response = await fetch(API_URL, {
@@ -17,7 +18,7 @@
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ sessionToken }),
+                body: JSON.stringify({ sessionToken, company }), // Include company in the request body
             });
             if (response.ok) {
                 data = await response.json();
@@ -34,7 +35,7 @@
 
     $effect.pre(() => {
         fetchData();
-    })
+    });
 
 </script>
 
@@ -43,10 +44,14 @@
     <h4 class="text-muted-foreground">{t("customers.desc")}</h4>
 </div>
 
-<main class="mt-4">
+<main class="mt-4 w-full">
 
     {#if !loading}
         <CustomerDataTable {data} {columns}/>
+    {:else}
+        <div class="flex w-full justify-center items-center mt-24">
+            <Loader class="animate-spin text-gray-300" />
+        </div>
     {/if}
 </main>
 

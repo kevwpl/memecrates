@@ -2,11 +2,12 @@ export const translations: Record<string, Record<string, string>> = {
     'en': {
         'nav.dashboard': 'Dashboard',
         'nav.receipts': 'Invoices',
-        'nav.invoices': 'Invoices',
+        'nav.management': 'Management',
         'nav.companies': 'Companies',
-        'nav.other': 'Other',
+        'nav.general': 'General',
         'nav.customers': 'Customers',
         'nav.services': 'Services',
+        'nav.products': 'Products',
 
 
         'dashboard.title': "Dashboard",
@@ -40,11 +41,12 @@ export const translations: Record<string, Record<string, string>> = {
     'de': {
         'nav.dashboard': 'Zusammenfassung',
         'nav.receipts': 'Rechnungen',
-        'nav.invoices': 'Rechnungen',
+        'nav.management': 'Management',
         'nav.companies': 'Unternehmen',
-        'nav.other': 'Anderes',
+        'nav.general': 'Allgemein',
         'nav.customers': 'Kunden',
         'nav.services': 'Leistungen',
+        'nav.products': 'Produkte',
 
         'dashboard.title': "Zusammenfassung",
         'dashboard.dashboard': 'Zusammenfassung',

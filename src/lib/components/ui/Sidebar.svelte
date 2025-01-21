@@ -5,7 +5,7 @@
 
     import CompanySelection from "$lib/components/ui/CompanySelection.svelte";
 
-    import {Clock3, FilePlus, Handshake, LayoutDashboard, ReceiptEuroIcon, Shell, Users} from "lucide-svelte";
+    import {Clock3, FilePlus, Handshake, LayoutDashboard, Package, ReceiptEuroIcon, Shell, Users} from "lucide-svelte";
     import type {Company, User} from "$lib/types";
     import GalleryVerticalEnd from "lucide-svelte/icons/gallery-vertical-end";
     import NavUser from "$lib/components/ui/NavUser.svelte";
@@ -24,25 +24,25 @@
 
     const navMain = [
         {
-            title: t("nav.invoices"),
+            title: t("nav.general"),
             url: "#",
             items: [
                 {
                     title: t("nav.dashboard"),
                     url: "/" + locale.lang + "/app/dashboard",
                     icon: LayoutDashboard
-                },
+                }
+            ],
+        },
+        {
+            title: t("nav.management"),
+            url: "#",
+            items: [
                 {
                     title: t("nav.receipts"),
                     url: "/" + locale.lang + "/app/invoices",
                     icon: ReceiptEuroIcon
                 },
-            ],
-        },
-        {
-            title: t("nav.other"),
-            url: "#",
-            items: [
                 {
                     title: t("nav.customers"),
                     url: "/" + locale.lang + "/app/customers",
@@ -52,6 +52,11 @@
                     title: t("nav.services"),
                     url: "/" + locale.lang + "/app/services",
                     icon: Handshake
+                },
+                {
+                    title: t("nav.products"),
+                    url: "/" + locale.lang + "/app/products",
+                    icon: Package
                 },
             ],
         }

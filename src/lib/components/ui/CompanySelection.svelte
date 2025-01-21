@@ -27,18 +27,15 @@
         }
     };
 
+    const selectCompany = (company: Company) => {
+        selectedCompany = company;
+        sessionStorage.setItem("Company", selectedCompany.uuid);
+    }
+
     $effect.pre(() => {
         currentCompany.set(companies[0]);
+        sessionStorage.setItem("Company", companies[0].uuid);
     })
-    /*// Add the event listener when the component is mounted
-    $effect.pre(() =>{
-        window.addEventListener('keydown', handleKeyPress);
-    });
-
-    // Remove the event listener when the component is destroyed
-    onDestroy(() => {
-        window.removeEventListener('keydown', handleKeyPress);
-    });*/
 </script>
 
 <Sidebar.Menu>
@@ -74,7 +71,7 @@
                     <DropdownMenu.Label class="text-muted-foreground text-xs">{t("nav.companies")}</DropdownMenu.Label>
                     {#each companies as company, index (company.name)}
                         {@const Icon = company.icon}
-                        <DropdownMenu.Item onSelect={() => (selectedCompany = company)}>
+                        <DropdownMenu.Item onSelect={() => {selectCompany(company)}}>
                             <div class="flex size-6 items-center justify-center rounded-sm border">
                                 <Icon class="size-4 shrink-0" />
                             </div>
