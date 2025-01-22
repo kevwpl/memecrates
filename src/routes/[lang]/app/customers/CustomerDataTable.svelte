@@ -5,7 +5,7 @@
         getCoreRowModel,
         getPaginationRowModel,
         getSortedRowModel,
-        type PaginationState
+        type PaginationState, type RowSelectionState, type SortingState
     } from "@tanstack/table-core";
     import * as Pagination from "$lib/components/ui/pagination/index.js";
     import {
@@ -23,6 +23,7 @@
     let { data, columns }: DataTableProps<TData, TValue> = $props();
     let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });
     let sorting = $state<SortingState>([]);
+    let rowSelection = $state<RowSelectionState>({});
 
     const table = createSvelteTable({
         get data() {
@@ -46,6 +47,13 @@
                 pagination = updater;
             }
         },
+        onRowSelectionChange: (updater) => {
+            if (typeof updater === "function") {
+                rowSelection = updater(rowSelection);
+            } else {
+                rowSelection = updater;
+            }
+        },
         state: {
             get pagination() {
                 return pagination;
@@ -53,6 +61,9 @@
             get sorting() {
                 return sorting;
             },
+            get rowSelection() {
+                return rowSelection;
+            }
         },
     });
 </script>
