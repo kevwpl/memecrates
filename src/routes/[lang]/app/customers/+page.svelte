@@ -5,6 +5,8 @@
     import { columns } from "./CustomerColumns.ts";
     import * as Sheet from "$lib/components/ui/sheet/index.js";
     import { buttonVariants } from "$lib/components/ui/button/index.js";
+    import {Label} from "$lib/components/ui/label";
+    import {Input} from "$lib/components/ui/input";
 
     let data = $state([]);
     let loading = $state(true);
@@ -50,12 +52,22 @@
         <Sheet.Trigger class={buttonVariants({ variant: "default" })}><UserPlus />{t("customers.addcustomer")}</Sheet.Trigger>
         <Sheet.Content>
             <Sheet.Header>
-                <Sheet.Title>Are you sure absolutely sure?</Sheet.Title>
+                <Sheet.Title class="flex items-center align-middle gap-2"><UserPlus />{t("customers.addcustomer")}</Sheet.Title>
                 <Sheet.Description>
-                    This action cannot be undone. This will permanently delete your account
-                    and remove your data from our servers.
+
                 </Sheet.Description>
             </Sheet.Header>
+
+            <div class="grid gap-4 py-4">
+                <div class="grid grid-cols-4 items-center gap-4">
+                    <Label for="name" class="text-right">Name</Label>
+                    <Input id="name" value="Pedro Duarte" class="col-span-3" />
+                </div>
+                <div class="grid grid-cols-4 items-center gap-4">
+                    <Label for="username" class="text-right">Username</Label>
+                    <Input id="username" value="@peduarte" class="col-span-3" />
+                </div>
+            </div>
         </Sheet.Content>
     </Sheet.Root>
 </div>
