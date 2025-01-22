@@ -1,6 +1,12 @@
 
 <script lang="ts" generics="TData, TValue">
-    import {type ColumnDef, getCoreRowModel, getPaginationRowModel, type PaginationState} from "@tanstack/table-core";
+    import {
+        type ColumnDef,
+        getCoreRowModel,
+        getPaginationRowModel,
+        getSortedRowModel,
+        type PaginationState
+    } from "@tanstack/table-core";
     import * as Pagination from "$lib/components/ui/pagination/index.js";
     import {
         createSvelteTable,
@@ -16,16 +22,22 @@
 
     let { data, columns }: DataTableProps<TData, TValue> = $props();
     let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });
+    let sorting = $state<SortingState>([]);
 
     const table = createSvelteTable({
         get data() {
             return data;
         },
         columns,
-        state: {
-            get pagination() {
-                return pagination;
-            },
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        onSortingChange: (updater) => {
+            if (typeof updater === "function") {
+                sorting = updater(sorting);
+            } else {
+                sorting = updater;
+            }
         },
         onPaginationChange: (updater) => {
             if (typeof updater === "function") {
@@ -34,8 +46,14 @@
                 pagination = updater;
             }
         },
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
+        state: {
+            get pagination() {
+                return pagination;
+            },
+            get sorting() {
+                return sorting;
+            },
+        },
     });
 </script>
 

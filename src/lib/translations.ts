@@ -1,3 +1,5 @@
+import {t} from "$lib/i18n.svelte";
+
 export const translations: Record<string, Record<string, string>> = {
     'en': {
         'nav.dashboard': 'Dashboard',
@@ -29,6 +31,7 @@ export const translations: Record<string, Record<string, string>> = {
         'customers.zip': "Zip",
         'customers.town': "Town",
         'customers.uid': "UID",
+        'customers.addcustomer': "Add customer",
 
         'login.title': "Login",
         'login.login': "Login",
@@ -67,6 +70,7 @@ export const translations: Record<string, Record<string, string>> = {
         'customers.zip': "PLZ",
         'customers.town': "Stadt",
         'customers.uid': "UID",
+        'customers.addcustomer': "Kunde hinzufügen",
 
         'login.title': "Anmelden",
         'login.login': "Anmelden",

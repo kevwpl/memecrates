@@ -3,27 +3,53 @@ import type {Customer} from "$lib/types";
 import {t} from "$lib/i18n.svelte";
 import {renderComponent} from "$lib/components/ui/data-table";
 import CustomerDataTableActions from "./CustomerDataTableActions.svelte";
+import DataTableHeaderButton from "$lib/components/ui/DataTableHeaderButton.svelte";
 
 export const columns: ColumnDef<Customer>[] = [
     {
         accessorKey: "name",
-        header: t("customers.name"),
+        header: ({ column }) =>
+            renderComponent(DataTableHeaderButton, {
+                onclick: () => column.toggleSorting(column.getIsSorted() === "asc"),
+                sort: column.getIsSorted(),
+                name: t("customers.name")
+            }),
     },
     {
         accessorKey: "street",
-        header: t("customers.street"),
+        header: ({ column }) =>
+            renderComponent(DataTableHeaderButton, {
+                onclick: () => column.toggleSorting(column.getIsSorted() === "asc"),
+                sort: column.getIsSorted(),
+                name: t("customers.street")
+            }),
     },
     {
         accessorKey: "zip",
-        header: t("customers.zip"),
+        header: ({ column }) =>
+            renderComponent(DataTableHeaderButton, {
+                onclick: () => column.toggleSorting(column.getIsSorted() === "asc"),
+                sort: column.getIsSorted(),
+                name: t("customers.zip")
+            }),
     },
     {
         accessorKey: "town",
-        header: t("customers.town"),
+        header: ({ column }) =>
+            renderComponent(DataTableHeaderButton, {
+                onclick: () => column.toggleSorting(column.getIsSorted() === "asc"),
+                sort: column.getIsSorted(),
+                name: t("customers.town")
+            }),
     },
     {
         accessorKey: "uid",
-        header: t("customers.uid"),
+        header: ({ column }) =>
+            renderComponent(DataTableHeaderButton, {
+                onclick: () => column.toggleSorting(column.getIsSorted() === "asc"),
+                sort: column.getIsSorted(),
+                name: t("customers.uid")
+            }),
     },
     {
         id: "actions",
