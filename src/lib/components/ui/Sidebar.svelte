@@ -136,10 +136,10 @@
                         {#each group.items as item (item.title)}
                             <Sidebar.MenuItem>
                                 {@const Icon = item.icon}
-                                <Sidebar.MenuButton>
+                                <Sidebar.MenuButton class="h-10">
                                     {#snippet child({ props })}
                                         <a href={item.url} {...props}>
-                                            <Icon />
+                                            <Icon class="size-10"/>
                                             {item.title}
                                         </a>
                                     {/snippet}

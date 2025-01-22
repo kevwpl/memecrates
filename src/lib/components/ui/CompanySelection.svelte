@@ -7,8 +7,9 @@
     import type {Company} from "$lib/types";
     import {useSidebar} from "$lib/components/ui/sidebar/index.js";
     import {onDestroy} from "svelte";
-    import { t } from "$lib/i18n.svelte";
+    import { t, locale } from "$lib/i18n.svelte";
     import { currentCompany } from "$lib/stores/stores";
+    import {goto, invalidateAll} from "$app/navigation";
 
     let { companies, defaultCompany }: { companies: Company[]; defaultCompany: Company } = $props();
 
@@ -30,12 +31,23 @@
     const selectCompany = (company: Company) => {
         selectedCompany = company;
         sessionStorage.setItem("Company", selectedCompany.uuid);
+        goto("/" + locale.lang + "/app/switchCompany");
     }
 
     $effect.pre(() => {
-        currentCompany.set(companies[0]);
-        sessionStorage.setItem("Company", companies[0].uuid);
-    })
+        const storedCompanyUUID = sessionStorage.getItem("Company");
+
+        const storedCompany = companies.find(company => company.uuid === storedCompanyUUID);
+
+        if (storedCompany) {
+            currentCompany.set(storedCompany.uuid);
+            selectedCompany = storedCompany;
+        } else {
+            currentCompany.set(companies[0]);
+            sessionStorage.setItem("Company", companies[0].uuid);
+        }
+    });
+
 </script>
 
 <Sidebar.Menu>
