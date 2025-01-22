@@ -10,13 +10,13 @@ const pool = new Pool({
     port: parseInt(DB_PORT ?? '', 10)
 });
 
-export const POST: RequestHandler = async ({ request }) => {
+export const DELETE: RequestHandler = async ({ request }) => {
     try {
         // Extract fields from the request body
-        const { sessionToken, name, street, zip, town, uid, company } = await request.json();
+        const { sessionToken, customerId } = await request.json();
 
         // Validate required fields
-        if (!sessionToken || !name || !street || !zip || !town || !company) {
+        if (!sessionToken || !customerId) {
             return new Response(
                 JSON.stringify({ error: "Missing required fields" }),
                 { status: 400, headers: { "Content-Type": "application/json" } }
@@ -39,35 +39,30 @@ export const POST: RequestHandler = async ({ request }) => {
                     { status: 401, headers: { "Content-Type": "application/json" } }
                 );
             }
+            // Delete the customer from the database
+            const deleteQuery = `
+                DELETE FROM customer
+                WHERE uuid = $1
+                RETURNING *
+            `;
+            const result = await client.query(deleteQuery, [customerId]);
 
-            let insertQuery;
-            let queryParams;
-
-            if (uid) {
-                insertQuery = `
-                    INSERT INTO customer (name, street, zip, town, uid, company)
-                    VALUES ($1, $2, $3, $4, $5, $6)
-                    RETURNING *`;
-                            queryParams = [name, street, zip, town, uid, company];
-            } else {
-                            insertQuery = `
-                    INSERT INTO customer (name, street, zip, town, company)
-                    VALUES ($1, $2, $3, $4, $5)
-                    RETURNING *`;
-                queryParams = [name, street, zip, town, company];
+            if (result.rows.length === 0) {
+                return new Response(
+                    JSON.stringify({ error: "Customer not found" }),
+                    { status: 404, headers: { "Content-Type": "application/json" } }
+                );
             }
 
-            const result = await client.query(insertQuery, queryParams);
-
-            return new Response(JSON.stringify(result.rows[0]), {
-                status: 201,
+            return new Response(JSON.stringify({ message: "Customer deleted successfully", customer: result.rows[0] }), {
+                status: 200,
                 headers: { "Content-Type": "application/json" },
             });
         } finally {
             await client.release();
         }
     } catch (err) {
-        console.error("Error adding customer:", err);
+        console.error("Error deleting customer:", err);
         return new Response(
             JSON.stringify({ error: "Internal server error" }),
             { status: 500, headers: { "Content-Type": "application/json" } }

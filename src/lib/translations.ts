@@ -32,6 +32,7 @@ export const translations: Record<string, Record<string, string>> = {
         'customers.town': "Town",
         'customers.uid': "UID",
         'customers.addcustomer': "Add customer",
+        'customers.submit': "Submit",
 
         'login.title': "Login",
         'login.login': "Login",
@@ -71,6 +72,7 @@ export const translations: Record<string, Record<string, string>> = {
         'customers.town': "Stadt",
         'customers.uid': "UID",
         'customers.addcustomer': "Kunde hinzufügen",
+        'customers.submit': "Bestätigen",
 
         'login.title': "Anmelden",
         'login.login': "Anmelden",

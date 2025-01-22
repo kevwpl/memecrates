@@ -4,12 +4,19 @@
     import CustomerDataTable from "./CustomerDataTable.svelte";
     import { columns } from "./CustomerColumns.ts";
     import * as Sheet from "$lib/components/ui/sheet/index.js";
-    import { buttonVariants } from "$lib/components/ui/button/index.js";
+    import {Button, buttonVariants} from "$lib/components/ui/button/index.js";
     import {Label} from "$lib/components/ui/label";
     import {Input} from "$lib/components/ui/input";
+    import {toast} from "svelte-sonner";
 
     let data = $state([]);
     let loading = $state(true);
+
+    let newName = $state("");
+    let newStreet = $state("");
+    let newTown = $state("");
+    let newZip = $state("");
+    let newUID = $state("");
 
     const API_URL = '/api/get/customers';
     async function fetchData() {
@@ -37,6 +44,53 @@
         }
     }
 
+    const createNewCustomer = async () => {
+        try {
+            // Retrieve sessionToken and company from sessionStorage
+            const sessionToken = sessionStorage.getItem("token");
+            const company = sessionStorage.getItem("Company");
+
+            // Validate required fields
+            if (!sessionToken || !company || !newName || !newStreet || !newTown) {
+                toast.error("Please fill in all required fields.");
+                return;
+            }
+
+            // Construct the payload
+            const payload = {
+                sessionToken,
+                name: newName,
+                street: newStreet,
+                zip: "123", // Add zip if available or modify accordingly
+                town: newTown,
+                uid: newUID || null,
+                company
+            };
+
+            // Send POST request to the API endpoint
+            const response = await fetch("/api/add/customer", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            // Handle the API response
+            if (response.ok) {
+                const data = await response.json();
+                toast.success("Customer added successfully!");
+                console.log("New Customer:", data);
+            } else {
+                const errorData = await response.json();
+                toast.error(`Error: ${errorData.error}`);
+            }
+        } catch (err) {
+            console.error("Error creating new customer:", err);
+            toast.error("An error occurred while adding the customer.");
+        }
+    };
+
     $effect.pre(() => {
         fetchData();
     });
@@ -60,12 +114,27 @@
 
             <div class="grid gap-4 py-4">
                 <div class="grid grid-cols-4 items-center gap-4">
-                    <Label for="name" class="text-right">Name</Label>
-                    <Input id="name" value="Pedro Duarte" class="col-span-3" />
+                    <Label for="name" class="text-right">{t("customers.name")}</Label>
+                    <Input id="name" bind:value={newName} placeholder="John Doe" class="col-span-3" />
                 </div>
                 <div class="grid grid-cols-4 items-center gap-4">
-                    <Label for="username" class="text-right">Username</Label>
-                    <Input id="username" value="@peduarte" class="col-span-3" />
+                    <Label for="street" class="text-right">{t("customers.street")}</Label>
+                    <Input id="street" bind:value={newStreet} placeholder="Defaultstreet 13" class="col-span-3" />
+                </div>
+                <div class="grid grid-cols-4 items-center gap-4">
+                    <Label for="zip" class="text-right">{t("customers.zip")}</Label>
+                    <Input id="zip" bind:value={newZip} placeholder="1234" class="col-span-3" />
+                </div>
+                <div class="grid grid-cols-4 items-center gap-4">
+                    <Label for="street" class="text-right">{t("customers.town")}</Label>
+                    <Input id="street" bind:value={newTown} placeholder="Los Angeles" class="col-span-3" />
+                </div>
+                <div class="grid grid-cols-4 items-center gap-4">
+                    <Label for="street" class="text-right">{t("customers.uid")}</Label>
+                    <Input id="street" bind:value={newUID} placeholder="ATU12345678" class="col-span-3" />
+                </div>
+                <div class="text-right">
+                    <Button onclick={createNewCustomer}>{t("customers.submit")}</Button>
                 </div>
             </div>
         </Sheet.Content>
