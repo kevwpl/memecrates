@@ -20,6 +20,7 @@
 
     const API_URL = '/api/get/customers';
     async function fetchData() {
+        loading = true;
         const sessionToken = sessionStorage.getItem("token") || "";
         const company = sessionStorage.getItem("Company");
 
