@@ -5,6 +5,7 @@ import {renderComponent, renderSnippet} from "$lib/components/ui/data-table";
 import { Checkbox } from "$lib/components/ui/checkbox/index.js";
 import DataTableHeaderButton from "$lib/components/ui/DataTableHeaderButton.svelte";
 import {createRawSnippet} from "svelte";
+import ServiceDataTableActions from "./ServiceDataTableActions.svelte";
 
 export const columns: ColumnDef<Customer>[] = [
     {
@@ -74,7 +75,7 @@ export const columns: ColumnDef<Customer>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
-            //return renderComponent(CustomerDataTableActions, { id: row.original.uuid })
+            return renderComponent(ServiceDataTableActions, { id: row.original.uuid })
         }
     },
 ];
