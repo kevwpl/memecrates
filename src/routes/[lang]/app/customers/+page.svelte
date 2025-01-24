@@ -1,7 +1,6 @@
 <script lang="ts">
     import {LayoutDashboard, Loader, Loader2, ReceiptEuro, UserPlus, Users} from "lucide-svelte";
     import { t } from "$lib/i18n.svelte.ts";
-    import CustomerDataTable from "./CustomerDataTable.svelte";
     import { columns } from "./CustomerColumns.ts";
     import * as Sheet from "$lib/components/ui/sheet/index.js";
     import {Button, buttonVariants} from "$lib/components/ui/button/index.js";
@@ -9,6 +8,7 @@
     import {Input} from "$lib/components/ui/input";
     import {toast} from "svelte-sonner";
     import {broadcaster} from "$lib/stores/stores";
+    import CustomerDataTable from "../services/ServiceDataTable.svelte";
 
     let data = $state([]);
     let loading = $state(true);

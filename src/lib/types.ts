@@ -39,3 +39,10 @@ export type Customer = {
     uid?: string,
     company: string,
 }
+
+export type Service = {
+    uuid: string;
+    name: string;
+    price: number;
+    company: string;
+};

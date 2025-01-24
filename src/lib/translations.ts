@@ -25,6 +25,10 @@ export const translations: Record<string, Record<string, string>> = {
         'services.title': "Services",
         'services.services': "Services",
         'services.desc': "Here you can see all your services",
+        'services.name': "Name",
+        'services.price': "Price",
+        'services.bookings': "Bookings",
+        'services.addservice': "Add service",
 
         'customers.title': "Customers",
         'customers.customers': "Customers",
@@ -72,6 +76,10 @@ export const translations: Record<string, Record<string, string>> = {
         'services.title': "Leistungen",
         'services.services': "Leistungen",
         'services.desc': "Hier kannst du alle deine Leistungen sehen",
+        'services.name': "Name",
+        'services.price': "Preis",
+        'services.bookings': "Buchungen",
+        'services.addservice': "Leistung hinzufügen",
 
         'customers.title': "Kunden",
         'customers.customers': "Kunden",
