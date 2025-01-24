@@ -46,6 +46,7 @@
     }
 
     const createNewCustomer = async () => {
+        loading = true;
         try {
             // Retrieve sessionToken and company from sessionStorage
             const sessionToken = sessionStorage.getItem("token");
@@ -54,6 +55,7 @@
             // Validate required fields
             if (!sessionToken || !company || !newName || !newStreet || !newTown) {
                 toast.error("Please fill in all required fields.");
+                loading = false;
                 return;
             }
 
@@ -82,13 +84,16 @@
                 const data = await response.json();
                 toast.success("Customer added successfully!");
                 console.log("New Customer:", data);
+                fetchData();
             } else {
                 const errorData = await response.json();
                 toast.error(`Error: ${errorData.error}`);
+                loading = false;
             }
         } catch (err) {
             console.error("Error creating new customer:", err);
             toast.error("An error occurred while adding the customer.");
+            loading = false;
         }
     };
 
@@ -134,9 +139,13 @@
                     <Label for="street" class="text-right">{t("customers.uid")}</Label>
                     <Input id="street" bind:value={newUID} placeholder="ATU12345678" class="col-span-3" />
                 </div>
-                <div class="text-right">
-                    <Button onclick={createNewCustomer}>{t("customers.submit")}</Button>
-                </div>
+                <Sheet.Footer>
+                    <Sheet.Close>
+                        <div class="text-right">
+                            <Button onclick={createNewCustomer}>{t("customers.submit")}</Button>
+                        </div>
+                    </Sheet.Close>
+                </Sheet.Footer>
             </div>
         </Sheet.Content>
     </Sheet.Root>
