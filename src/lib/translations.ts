@@ -10,6 +10,9 @@ export const translations: Record<string, Record<string, string>> = {
         'nav.customers': 'Customers',
         'nav.services': 'Services',
         'nav.products': 'Products',
+        'nav.company': 'Company',
+        'nav.settings': 'Settings',
+        'nav.users': 'Users',
 
 
         'dashboard.title': "Dashboard",
@@ -51,6 +54,9 @@ export const translations: Record<string, Record<string, string>> = {
         'nav.customers': 'Kunden',
         'nav.services': 'Leistungen',
         'nav.products': 'Produkte',
+        'nav.company': 'Unternehmen',
+        'nav.settings': 'Einstellungen',
+        'nav.users': 'Benutzer',
 
         'dashboard.title': "Zusammenfassung",
         'dashboard.dashboard': 'Zusammenfassung',

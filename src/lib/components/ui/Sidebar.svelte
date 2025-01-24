@@ -5,7 +5,18 @@
 
     import CompanySelection from "$lib/components/ui/CompanySelection.svelte";
 
-    import {Clock3, FilePlus, Handshake, LayoutDashboard, Package, ReceiptEuroIcon, Shell, Users} from "lucide-svelte";
+    import {
+        Building2,
+        Clock3,
+        FilePlus,
+        Handshake,
+        Laptop,
+        LayoutDashboard,
+        Package,
+        ReceiptEuroIcon, Settings,
+        Shell,
+        Users
+    } from "lucide-svelte";
     import type {Company, User} from "$lib/types";
     import GalleryVerticalEnd from "lucide-svelte/icons/gallery-vertical-end";
     import NavUser from "$lib/components/ui/NavUser.svelte";
@@ -59,7 +70,23 @@
                     icon: Package
                 },
             ],
-        }
+        },
+        {
+            title: t("nav.company"),
+            url: "#",
+            items: [
+                {
+                    title: t("nav.settings"),
+                    url: "/" + locale.lang + "/app/dashboard",
+                    icon: Settings
+                },
+                {
+                    title: t("nav.users"),
+                    url: "/" + locale.lang + "/app/dashboard",
+                    icon: Laptop
+                }
+            ],
+        },
     ];
 
     async function fetchCompanies(
