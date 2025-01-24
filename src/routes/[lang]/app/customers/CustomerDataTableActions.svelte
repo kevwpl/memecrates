@@ -4,6 +4,7 @@
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
     import {Eye, FilePlus, Pen, Trash} from "lucide-svelte";
     import {toast} from "svelte-sonner";
+    import {broadcaster} from "$lib/stores/stores";
 
     let { id }: { id: string } = $props();
 
@@ -37,6 +38,7 @@
             if (response.ok) {
                 const data = await response.json();
                 toast.success("Customer deleted successfully!");
+                broadcaster.set("refreshCustomers");
             } else {
                 const errorData = await response.json();
                 toast.error(`Error: ${errorData.error}`);

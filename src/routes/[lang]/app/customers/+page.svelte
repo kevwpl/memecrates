@@ -8,6 +8,7 @@
     import {Label} from "$lib/components/ui/label";
     import {Input} from "$lib/components/ui/input";
     import {toast} from "svelte-sonner";
+    import {broadcaster} from "$lib/stores/stores";
 
     let data = $state([]);
     let loading = $state(true);
@@ -99,6 +100,13 @@
 
     $effect.pre(() => {
         fetchData();
+
+        broadcaster.subscribe((value) => {
+            if(value === "refreshCustomers"){
+                fetchData();
+                broadcaster.set(null);
+            }
+        })
     });
 
 </script>

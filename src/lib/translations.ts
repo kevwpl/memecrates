@@ -44,6 +44,10 @@ export const translations: Record<string, Record<string, string>> = {
         'login.tos': "By clicking continue, you agree to our",
         'login.tos2': "and",
         'login.notfound': "Email or password incorrect",
+
+        'pagination.previous': "Previous",
+        'pagination.next': "Next",
+        'pagination.results': "Results",
     },
     'de': {
         'nav.dashboard': 'Zusammenfassung',
@@ -87,5 +91,9 @@ export const translations: Record<string, Record<string, string>> = {
         'login.tos': "Wenn du dich anmeldest akzeptierst du automatisch unsere",
         'login.tos2': "und",
         'login.notfound': "Email oder Passwort falsch",
+
+        'pagination.previous': "Zurück",
+        'pagination.next': "Weiter",
+        'pagination.results': "Ergebnisse",
     }
 };

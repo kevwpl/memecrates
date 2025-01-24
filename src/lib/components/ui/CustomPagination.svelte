@@ -4,6 +4,7 @@
     import type {PaginationState, Table} from "@tanstack/table-core";
     import ChevronLeft from "lucide-svelte/icons/chevron-left";
     import ChevronRight from "lucide-svelte/icons/chevron-right";
+    import {t} from "$lib/i18n.svelte";
 
     let { table, pagination } : { table: Table<any>, pagination: PaginationState} = $props();
 
@@ -29,7 +30,7 @@
                     <Pagination.Item>
                         <Pagination.PrevButton>
                             <ChevronLeft class="size-4" />
-                            <span class="hidden sm:block">Zurück</span>
+                            <span class="hidden sm:block">{t("pagination.previous")}</span>
                         </Pagination.PrevButton>
                     </Pagination.Item>
                     {#each pages as page (page.key)}
@@ -47,13 +48,13 @@
                     {/each}
                     <Pagination.Item>
                         <Pagination.NextButton>
-                            <span class="hidden sm:block">Weiter</span>
+                            <span class="hidden sm:block">{t("pagination.next")}</span>
                             <ChevronRight class="size-4" />
                         </Pagination.NextButton>
                     </Pagination.Item>
                 </Pagination.Content>
                 <p class="text-center text-[13px] mt-2 text-muted-foreground">
-                    Ergebnisse {range.start + 1} - {range.end}
+                    {t("pagination.results")} {range.start + 1} - {range.end}
                 </p>
             {/snippet}
         </Pagination.Root>
