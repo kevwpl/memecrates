@@ -36,7 +36,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
             if (videoResult.rowCount === 0) {
                 return new Response(
-                    JSON.stringify({ error: "No video found for this rarity" }),
+                    JSON.stringify({ error: "No video found" }),
                     { status: 404, headers: { "Content-Type": "application/json" } }
                 );
             }
