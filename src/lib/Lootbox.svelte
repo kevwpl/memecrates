@@ -31,16 +31,13 @@
     // Constants for the lootbox
     const lootboxWidth = 900;
     const itemWidth = 85;
-    // Variable to track the last tick index
     let lastTickIndex = -1;
-
-    // Create a variable for the audio element; it will be initialized on the client.
     let tickSound;
 
-    // Use onMount to ensure browser-only code runs after the component mounts
     onMount(() => {
+        // Initialize tickSound on the client
         tickSound = new Audio('/tick.wav');
-        tickSound.volume = 0.2; // Adjust volume as needed
+        tickSound.volume = 0.2;
     });
 
     // Crate functions and variables
@@ -75,6 +72,8 @@
     let popupCrate = null;
     let showVideo = false;
     let videoUrl = null;
+    // We'll store the current video id separately for weight adjustments.
+    let currentVideoId = "";
 
     // Popup state for submitting a meme
     let showSubmitPopup = false;
@@ -95,7 +94,6 @@
             const currentTickIndex = Math.floor((Math.abs(translateX) + lootboxWidth / 2) / itemWidth);
             if (currentTickIndex !== lastTickIndex) {
                 lastTickIndex = currentTickIndex;
-                // Play tick sound only if tickSound has been initialized (i.e., on the client)
                 if (tickSound) {
                     tickSound.currentTime = 0;
                     tickSound.play();
@@ -111,18 +109,16 @@
     }
 
     function selectFinalItem() {
-        const offsetFinal = lootboxWidth / 2 - itemWidth / 2; // Center offset
+        const offsetFinal = lootboxWidth / 2 - itemWidth / 2;
         let selectedIndex =
             Math.round((Math.abs(translateX) + offsetFinal) / itemWidth) % itemList.length;
         let selectedItem = itemList[selectedIndex];
         console.log("Selected Item Index:", selectedIndex, "Selected Item:", selectedItem);
-        // Add the selected crate to the inventory and show it in the popup
         inventory = [...inventory, selectedItem];
         popupCrate = selectedItem;
     }
 
-    // Fetch a random YouTube video based on rarity from the backend
-    async function getYTVideo(rarity) {
+    async function getVideo(rarity) {
         try {
             const res = await fetch('/api/getMeme', {
                 method: 'POST',
@@ -134,8 +130,20 @@
                 return null;
             }
             const data = await res.json();
-            // Construct a YouTube embed URL using the fetched videoid
-            return `https://www.youtube.com/embed/${data.videoid}`;
+            // Build the embed URL based on the source field.
+            let embedUrl = "";
+            if (data.source === "YT") {
+                // YouTube embed URL
+                embedUrl = `https://www.youtube.com/embed/${data.videoid}`;
+            } else if (data.source === "IG") {
+                // Instagram Reels embed URL
+                // Assumes videoid is the reel's unique identifier.
+                embedUrl = `https://www.instagram.com/reel/${data.videoid}/embed`;
+            } else {
+                // Fallback: if data.videoid is a full URL already.
+                embedUrl = data.videoid;
+            }
+            return { embedUrl, videoid: data.videoid };
         } catch (error) {
             console.error("Error fetching video:", error);
             return null;
@@ -152,43 +160,96 @@
 
     async function openNow() {
         removeCrateFromInventory(popupCrate);
-        videoUrl = await getYTVideo(popupCrate.skin);
-        showVideo = true;
+        const result = await getVideo(popupCrate.skin);
+        if (result && result.embedUrl) {
+            currentVideoId = result.videoid;
+            videoUrl = result.embedUrl;
+            showVideo = true;
+        }
     }
 
-    function closePopup() {
-        popupCrate = null;
-        showVideo = false;
-        videoUrl = null;
+
+    // Increase the video's weight by calling /api/alterMeme with prop: true
+    async function increaseWeight() {
+        if (!currentVideoId) return;
+        try {
+            const res = await fetch('/api/alterMeme', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ videoid: currentVideoId, prop: true })
+            });
+            const data = await res.json();
+            console.log("Weight increased", data);
+        } catch (error) {
+            console.error("Error increasing weight", error);
+        }
+        closePopup();
+    }
+
+    // Decrease the video's weight by calling /api/alterMeme with prop: false
+    async function decreaseWeight() {
+        if (!currentVideoId) return;
+        try {
+            const res = await fetch('/api/alterMeme', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ videoid: currentVideoId, prop: false })
+            });
+            const data = await res.json();
+            console.log("Weight decreased", data);
+        } catch (error) {
+            console.error("Error decreasing weight", error);
+        }
+        closePopup();
     }
 
     async function submitMeme() {
         try {
-            // Extract video id from the link if necessary
             let videoId = memeVideoLink;
-            const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/;
-            const match = memeVideoLink.match(youtubeRegex);
-            if (match && match[1]) {
-                videoId = match[1];
+            let source = "YT"; // default source
+
+            // Check if the link is for Instagram
+            if (memeVideoLink.includes("instagram.com")) {
+                // This regex matches both Instagram reels (/reel/) and posts (/p/)
+                const igRegex = /instagram\.com\/(?:reel|p)\/([^\/\?]+)/;
+                const igMatch = memeVideoLink.match(igRegex);
+                if (igMatch && igMatch[1]) {
+                    videoId = igMatch[1];
+                }
+                source = "IG";
+            } else {
+                // Otherwise, assume it's a YouTube link.
+                const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/;
+                const ytMatch = memeVideoLink.match(youtubeRegex);
+                if (ytMatch && ytMatch[1]) {
+                    videoId = ytMatch[1];
+                }
             }
 
             const res = await fetch('/api/submitMeme', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ videoLink: videoId, rarity: memeRarity })
+                body: JSON.stringify({ videoLink: videoId, rarity: memeRarity, source })
             });
             if (!res.ok) {
                 console.error("Failed to submit meme", await res.text());
                 return;
             }
-            // Optionally clear the form and close the popup
             memeVideoLink = "";
             memeRarity = "Common";
             showSubmitPopup = false;
-            alert("Meme submitted successfully!");
         } catch (error) {
             console.error("Error submitting meme:", error);
         }
+    }
+
+
+
+    function closePopup() {
+        popupCrate = null;
+        showVideo = false;
+        videoUrl = null;
+        currentVideoId = "";
     }
 
     function closeSubmitPopup() {
@@ -199,7 +260,6 @@
 <div class="min-h-screen flex flex-col items-center justify-center space-y-10 p-4">
     <!-- Buttons Row -->
     <div class="flex space-x-4">
-        <!-- Open Crate Button -->
         <Button
                 onclick={openCase}
                 disabled={rolling}
@@ -208,7 +268,6 @@
             <Package class="mr-2" />
             Open Memecrate
         </Button>
-        <!-- Submit Meme Button -->
         <Button
                 onclick={() => (showSubmitPopup = true)}
                 class="px-6 py-3 bg-purple-500 text-white rounded shadow hover:bg-purple-600 transition"
@@ -251,7 +310,7 @@
     {/if}
 </div>
 
-<!-- Popup Modal for Crate -->
+<!-- Popup Modal for Crate / Video -->
 {#if popupCrate}
     <div
             class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
@@ -285,22 +344,47 @@
                 </div>
             {:else}
                 {#if videoUrl}
-                    <iframe
-                            class="w-full h-full"
-                            src={videoUrl}
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                    ></iframe>
+                    {#if videoUrl.includes("instagram.com")}
+                        <div class="flex justify-center h-full w-full overflow-hidden">
+                            <iframe
+                                    src={videoUrl}
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen
+                                    style="transform: scale(2) translateY(23%);"
+                            ></iframe>
+                        </div>
+                    {:else}
+                        <iframe
+                                class="w-full h-full"
+                                src={videoUrl}
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen
+                        ></iframe>
+                    {/if}
                 {:else}
                     <p class="text-center text-white">Failed to load video</p>
                 {/if}
-                <div class="mt-4 flex justify-end">
+
+                <div class="mt-4 flex justify-end space-x-4">
+                    <Button
+                            onclick={increaseWeight}
+                            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    >
+                        Should be higher ranked
+                    </Button>
+                    <Button
+                            onclick={decreaseWeight}
+                            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                    >
+                        Should be lower ranked
+                    </Button>
                     <Button
                             onclick={closePopup}
                             class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
                     >
-                        Close
+                        Ranked exactly right
                     </Button>
                 </div>
             {/if}
@@ -322,7 +406,7 @@
                         type="text"
                         bind:value={memeVideoLink}
                         class="w-full p-2 rounded bg-gray-800 text-white border border-gray-700"
-                        placeholder="Enter YouTube video link or ID"
+                        placeholder="Enter YouTube or Instagram link"
                 />
             </div>
             <div class="mb-4">
