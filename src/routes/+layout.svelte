@@ -1,11 +1,12 @@
-<script lang="ts">
-    import '../app.css'
-    import { ModeWatcher } from "mode-watcher";
-    import { Toaster } from "$lib/components/ui/sonner";
+<script>
+    import {ModeWatcher} from "mode-watcher";
+    import { setMode } from "mode-watcher";
+
+    setMode("dark");
 
     let { children } = $props();
+    import "../app.css";
 </script>
 
 <ModeWatcher />
-<Toaster />
-{@render children?.()}
+{@render children()}
