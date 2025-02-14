@@ -8,23 +8,23 @@
     let items = {
         common: {
             skin: "Common",
-            img: "https://static.wikia.nocookie.net/mining-simulator/images/0/0d/Common_hat_crate.png"
+            img: "/crates/Common.png"
         },
         uncommon: {
             skin: "Uncommon",
-            img: "https://static.wikia.nocookie.net/mining-simulator/images/2/28/Unique_hat_crate.png"
+            img: "/crates/Common_1.png"
         },
         rare: {
             skin: "Rare",
-            img: "https://static.wikia.nocookie.net/mining-simulator/images/e/e1/Epic_hat_crate.png"
+            img: "/crates/Rare.png"
         },
         epic: {
             skin: "Epic",
-            img: "https://static.wikia.nocookie.net/mining-simulator/images/6/64/Mythical_hat_crate.png"
+            img: "/crates/Epic.png"
         },
         legendary: {
             skin: "Legendary",
-            img: "https://static.wikia.nocookie.net/mining-simulator/images/1/18/Omega_hat_crate.png"
+            img: "/crates/Legendary.png"
         }
     };
 
@@ -285,7 +285,7 @@
         >
             {#each itemList as item}
                 <Card.Root
-                        class="w-[85px] h-[88px] flex-shrink-0 bg-cover bg-center bg-origin-content p-2 bg-no-repeat"
+                        class="w-[85px] h-[88px] flex-shrink-0 bg-cover bg-center bg-origin-content bg-no-repeat"
                         style="background-image: url({item.img});"
                 ></Card.Root>
             {/each}
