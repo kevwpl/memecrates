@@ -278,7 +278,7 @@
 
     <!-- Lootbox Spinner -->
     <div class="w-[900px] h-[100px] overflow-hidden relative mt-4">
-        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-[2px] h-full bg-red-500 z-10"></div>
+        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-[2px] h-[88%] bg-white opacity-50 z-10"></div>
         <div
                 class="flex transition-none will-change-[transform]"
                 style="transform: translateX({translateX}px)"
